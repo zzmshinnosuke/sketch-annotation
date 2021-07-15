@@ -1,0 +1,90 @@
+{include file="common/header" /}
+{include file="common/js" /}
+
+<section id="apollo">
+    <div id="panel">
+        
+            <h1 id="scene_review">Scene {$task}</h1>  
+
+            <div class="task-buttons">
+                <button id="load" style="width: 60px;height: 20px;">load</button>
+                <button id="save" style="width: 80px;height: 20px;">save</button>
+                </br> </br>
+                <button id="previous" style="width: 60px;height: 20px;">back</button>
+                <button id="next" style="width: 80px;height: 20px;">next</button>            
+            </div>
+            <h1>object</h1>
+            <select id="objects">
+                <option disabled selected>object</option>
+            </select>
+            
+            <button id="add_object" style="width: 50px;height: 20px;">add</button>
+            <button id="show_select" style="width: 50px;height: 20px;">show</button>
+            <button id="delete_object" style="width: 50px;height: 20px;">delete</button>
+
+            <br/>
+            <h1>category</h1>
+            <select id="foreground">
+                <option disabled selected>foreground</option>
+            </select>
+
+            <select id="background">
+                <option disabled selected>background</option>
+            </select>
+
+            <div class="clear">
+                <h2>strokes</h2>
+            </div>
+            <select id="all_strokes">
+                <option disabled selected>all_stroke</option>
+            </select>
+            <select id="select_strokes">
+                <option disabled selected>select_stroke</option>
+            </select>   
+            <input type="checkbox" id="stroke_delete"/>delete
+            <h1>boundingbox</h1>
+            <button id="del_box" style="width: 70px;height: 20px;">DelBox</button> 
+            <button id="cancle_box" style="width: 90px;height: 20px;">CancleBox</button> 
+            <br/>
+            <h2>level</h2>
+            <select id="integrity">
+                <option value="-1">integrity</option>
+                <option value="100">100%</option>
+                <option value="66">>66%</option>
+                <option value="33">33%-66%</option>
+                <option value="0"><33%</option>
+            </select>
+            <select id="direction">
+                <option value="-1">direction</option>
+                <option value="f">front</option>
+                <option value="lf">left front</option>
+                <option value="l">left</option>
+                <option value="lb">left back</option>
+                <option value="b">back</option>
+                <option value="rb">right back</option>
+                <option value="r">right</option>
+                <option value="rf">right front</option>
+                <option value="n">none</option>
+            </select>   
+            </br></br>
+            <select id="similarity">
+                <option value="-1">similarity</option>
+                <option value="100">100%</option>
+                <option value="66">>66%</option>
+                <option value="33">33%-66%</option>
+                <option value="0"><33%</option>
+            </select>  
+            <select id="quality">
+                <option value="-1">quality</option>
+                <option value="100">100%</option>
+                <option value="66">>66%</option>
+                <option value="33">33%-66%</option>
+                <option value="0"><33%</option>
+            </select>  
+        </article>
+    </div>
+</section>
+
+</body>
+</html>
+

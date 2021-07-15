@@ -1,0 +1,11 @@
+backup1/*
+backup2/*
+backup3/*
+results1/*
+results2/*
+results3/*
+
+runtime/log
+runtime/temp
+
+public/images
