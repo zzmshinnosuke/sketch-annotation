@@ -147,8 +147,12 @@ class Index
 			return; 
 		} 
 		$start = input('param.start/d', 1);
-		if ($start < 1) $start = 1; 
-		$N = config("total_tasks");
+		if ($start < 1) $start = 1;
+        
+		$file = fopen("public/images/background_box.txt", "r") or die("Unable to open file!");
+		$N = (int)fgets($file);
+		fclose($file);
+        
 		$end = input('param.end/d', $N);
 		if ($end > $N) $end = $N; 
 		

@@ -7,11 +7,11 @@ return [
 	'site_title'			=>	'ISCAS',
 	'site_desc'				=>	'sketch',
 	'view_replace_str'  =>  [
-		'__PUBLIC__'		=>	'/skelabelv2/public',
-		'__CSS__'			=>	'/skelabelv2/public/css',
-		'__JS__'			=>	'/skelabelv2/public/js',
-		'__ROOT__'			=>	'/skelabelv2/',
-		'__APP__'			=>	'/skelabelv2/',
+		'__PUBLIC__'		=>	'/sketch-annotation/public',
+		'__CSS__'			=>	'/sketch-annotation/public/css',
+		'__JS__'			=>	'/sketch-annotation/public/js',
+		'__ROOT__'			=>	'/sketch-annotation/',
+		'__APP__'			=>	'/sketch-annotation/',
 		'__FOLDER__'		=>	'tu',
 	],
 
@@ -19,7 +19,7 @@ return [
     // | Configuration
     // +----------------------------------------------------------------------
     'app_password'           => 'admin',
-    'total_tasks'            => 4663,
+    // 'total_tasks'            => 4345,
     'app_namespace'          => 'app',
     'app_debug'              => false,
     'app_trace'              => false,

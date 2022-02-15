@@ -17,11 +17,11 @@ var Parameters = function () {
 
     this.is_stroke_delete=false;//取消标注完的笔画模式
 };
-
+ 
 //通过物体id获取该物体的引用
 Parameters.prototype.getObjectFid = function (object_id) {
 	for (var i = 0; i < Paras.objects.length; ++i) {
-		var item = Paras.objects[i];
+		var item = Paras.objects[i]; 
 		if (item.id === object_id) {
 			return item;
 		}
@@ -314,14 +314,14 @@ Parameters.prototype.deleteobject=function(object_id)
                 if(j>1){
                     this.cur_object_id=this.objects[j-1].id;
                 }
-                else{
-                    this.cur_object_id=this.objects[0].id;
-                }
+                else{ }
             }  
             else{
                 this.cur_object_id=-1;
                 this.cur_object=null
             }
+                    this.cur_object_id=this.objects[0].id;
+               
                 
             return true;
         }
