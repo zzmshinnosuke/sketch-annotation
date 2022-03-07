@@ -20,9 +20,9 @@ Layout.prototype.init = function () {
     this.cancleboxbtn=$('#cancle_box');
 
 
-    if(Apollo.stroke.strokes)
+    if(Apollo.sketch.strokes)
     {
-        Paras.strokes=Apollo.stroke.strokes;  
+        Paras.strokes=Apollo.sketch.strokes;  
     }
 
     var boxs=Apollo.boxs.split('#');
@@ -74,7 +74,7 @@ Layout.prototype.load = function (_task = -1) {
             // console.log(list);
             if (list.length == 0)
                 return;
-            Paras.objects=list;
+            Paras.objects=list["objects"];
             if(Paras.objects.length>0)
             {
                 Paras.strokes=[];
@@ -101,16 +101,15 @@ Layout.prototype.load = function (_task = -1) {
 Layout.prototype.submit = function () {
     var d = new Date();
     Apollo.suffix = d.toLocaleDateString().toString().replace('/', "_").replace('/', "_")  + "_" + d.toLocaleTimeString().replace(":", "_").replace(":", "_").replace(" ", "");
-    var size=JSON.stringify(Paras.objects).length;
-    var md5_verify=md5(JSON.stringify(Paras.objects));
+    var result=JSON.stringify({"reference":Apollo.sketch.reference, "resolution":Apollo.sketch.resolution, "scene":Apollo.sketch.scene, "drawer":Apollo.sketch.drawer, "objects":Paras.objects});
+    var md5_verify=md5(result);
     var postData = {
         task: Apollo.task,
         save: 1,
         suffix: Apollo.suffix,
-        size:size,
-        md5:md5_verify,
-        review:Apollo.review,
-        json: JSON.stringify(Paras.objects),
+        md5: md5_verify,
+        review: Apollo.review,
+        json: result,
     };
     $.ajax({
         type: "POST",
@@ -276,7 +275,7 @@ Layout.prototype.addButtonEvents = function () {
 Layout.prototype.update_all_strokes = function () {
 	$("#all_strokes").html("");
 	for (var i = 0; i < Paras.strokes.length; ++i) {
-		$("#all_strokes").append("<option id="+'"'+"stroke"+'"'+">"+'strokek'+Paras.strokes[i].id + "</option>");
+		$("#all_strokes").append("<option id="+'"'+"stroke"+'"'+">"+'stroke'+Paras.strokes[i].id + "</option>");
 	}
 }
 

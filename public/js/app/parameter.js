@@ -303,7 +303,7 @@ Parameters.prototype.deleteobject=function(object_id)
         if(this.objects[j].id==object_id)
         {
             this.delete_box();
-            for(var i=0;i<this.objects[j].strokes.length;i++)
+            for(var i=0; i<this.objects[j].strokes.length;i++)
             {
                 this.strokes.push(this.objects[j].strokes[i]);
             }
@@ -311,18 +311,19 @@ Parameters.prototype.deleteobject=function(object_id)
             console.log("delete object:"+object_id);
             if(this.objects.length>=1)
             {
-                if(j>1){
+                if(j >= 1){
                     this.cur_object_id=this.objects[j-1].id;
                 }
-                else{ }
+                else{ 
+                    this.cur_object_id = this.objects[0].id;
+                }
             }  
             else{
                 this.cur_object_id=-1;
                 this.cur_object=null
             }
-                    this.cur_object_id=this.objects[0].id;
+                    // this.cur_object_id=this.objects[0].id;
                
-                
             return true;
         }
     }

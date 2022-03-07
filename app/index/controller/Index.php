@@ -20,13 +20,11 @@ class Index
 		{
 			$task = input('param.task/d', 0);
 			$suffix = input('param.suffix/s', "");
-			$size = input('param.size/d', 0);
 			$verify_md5= input('param.md5/s', 0);
 			$review=input('param.review/d', 0);
 			$md5_cal="";
 			if ($folder === 1||$folder === 2) {
 				$json = input('param.json/s', "");
-				$json_size=strlen($json);
 				$md5_cal=md5($json);
 				
 				if($md5_cal!=$verify_md5)
@@ -267,10 +265,10 @@ class Index
 		fclose($file);
 		
 		$filename = "public/images/stroke/" . $task . ".json";
-		$stroke="[]";
+		$sketch="[]";
 		if ( file_exists($filename) ) {
 			$file = fopen($filename, "r");
-			$stroke = fread($file, filesize($filename));
+			$sketch = fread($file, filesize($filename));
 			fclose($file);
 		}
 
@@ -282,7 +280,7 @@ class Index
 			'reference' => trim($name),
 			'review' => trim($review),
 			'boxs' => trim($boxs),
-			'stroke' => $stroke,
+			'sketch' => $sketch,
 			'ver' => '19',
 		];
 
