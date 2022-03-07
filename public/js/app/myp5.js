@@ -80,6 +80,16 @@ function keyPressed() {
         layout.update_select_strokes();
         layout.update_all_strokes();
     } 
+    
+    if (keyCode === 68){
+        Paras.is_stroke_delete=true;
+    }
+}
+
+function keyReleased() {
+    if (keyCode === 68){
+        Paras.is_stroke_delete=false;
+    }
 }
 
 var init=function(){
