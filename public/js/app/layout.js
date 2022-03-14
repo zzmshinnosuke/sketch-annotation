@@ -275,7 +275,7 @@ Layout.prototype.addButtonEvents = function () {
 Layout.prototype.update_all_strokes = function () {
 	$("#all_strokes").html("");
 	for (var i = 0; i < Paras.strokes.length; ++i) {
-		$("#all_strokes").append("<option id="+'"'+"stroke"+'"'+">"+'stroke'+Paras.strokes[i].id + "</option>");
+		$("#all_strokes").append("<option id="+'"'+"stroke"+'"'+">"+'stroke '+Paras.strokes[i].id + "</option>");
 	}
 }
 

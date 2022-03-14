@@ -206,13 +206,11 @@ var is_stroke_in_box=function(temp_stroke1,x1,y1,x2,y2){
 
 var process_user_input = function () {
     
-    if(mouseX>=0&&mouseX<=canvas_width+40&& mouseY>=0&&mouseY<=Math.max(screen_height,img.height)+20+canvas_y)
-    {  
+    if(mouseX>=0 && mouseX<=canvas_width+40 && mouseY>=0 && mouseY<=Math.max(screen_height,img.height)+20+canvas_y){  
         process_canvas();
     }
 
-    else if(mouseX>=image_x&&mouseX<=image_x+image_width+40 && mouseY>=0&&mouseY<=Math.max(screen_height,img.height)+20+canvas_y)
-    {
+    else if(mouseX>=image_x && mouseX<=image_x+image_width+40 && mouseY>=0 && mouseY<=Math.max(screen_height, img.height)+20+canvas_y){
         process_image();
     }
     else{
