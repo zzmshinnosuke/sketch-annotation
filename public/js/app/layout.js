@@ -18,7 +18,9 @@ Layout.prototype.init = function () {
 
     this.delboxbtn=$('#del_box');
     this.cancleboxbtn=$('#cancle_box');
-
+    
+    this.lbl_cur = $('#lbl_cur');
+    this.lbl_all = $('#lbl_all');
 
     if(Apollo.sketch.strokes)
     {
@@ -203,9 +205,41 @@ Layout.prototype.addButtonEvents = function () {
         if($("#stroke_delete").get(0).checked ==true)
         {          
             Paras.is_stroke_delete=true;
+            document.getElementById("defaultCanvas0").style.cursor = "url("+Apollo.publicUrl + 'css/images/eraser.png'+") 0 0,pointer";
         }
         else{
             Paras.is_stroke_delete=false;
+            document.getElementById("defaultCanvas0").style.cursor = "";
+        }
+    });
+    
+    $("#cb_cur").change(function () {
+        if($("#cb_cur").get(0).checked == true)
+        {          
+            Paras.is_show_cur_obj = true;
+        }
+        else{
+            Paras.is_show_cur_obj = false;
+        }
+    });
+    
+    $("#cb_useless").change(function () {
+        if($("#cb_useless").get(0).checked == true)
+        {          
+            Paras.is_show_useless = true;
+        }
+        else{
+            Paras.is_show_useless = false;
+        }
+    });
+    
+    $("#cb_reference").change(function () {
+        if($("#cb_reference").get(0).checked == true)
+        {          
+            Paras.is_show_reference = true;
+        }
+        else{
+            Paras.is_show_reference = false;
         }
     });
 
@@ -235,6 +269,7 @@ Layout.prototype.addButtonEvents = function () {
         layout.updateobjects();
         layout.updatebackground();
         layout.updateLevel();
+        layout.updateStrokes();
     }); 
 
     $("#background").change(function() {
@@ -255,7 +290,7 @@ Layout.prototype.addButtonEvents = function () {
         }
         layout.updateobjects();
         layout.updateforeground();
-        
+        layout.updateStrokes();
     }); 
 
     $("#direction").change(function() {
@@ -304,7 +339,7 @@ Layout.prototype.updateobjects = function () {
     if(Paras.cur_object_id!=-1)
     {
         $("#objects").val(Paras.cur_object_id);
-    }	
+    }
 };
 
 Layout.prototype.updateforeground= function() {
@@ -341,7 +376,13 @@ Layout.prototype.updateLevel=function(){
     $("#quality").change();
     $("#direction").val(-1);//背景无方向
     $("#direction").change();
-}
+};
+
+Layout.prototype.updateStrokes=function(){
+    this.lbl_cur.html("cur_num:"+Paras.getObjectFid(Paras.cur_object_id).strokes.length);
+    this.lbl_all.html("all_num:"+Paras.get_all_strokes_num(false));
+};
+
 
 Layout.prototype.refresh = function () {
     this.updateobjects();
@@ -349,6 +390,7 @@ Layout.prototype.refresh = function () {
     this.update_select_strokes();
     this.updateforeground();
     this.updatebackground();
+    this.updateStrokes();
 
     if(Paras.cur_object_id!=-1)
     {
@@ -357,6 +399,7 @@ Layout.prototype.refresh = function () {
         $("#direction").val(Paras.getObjectFid(Paras.cur_object_id).direction+"");
         $("#quality").val(Paras.getObjectFid(Paras.cur_object_id).quality+"");
     }
+    
 };
 
 var layout=new Layout();

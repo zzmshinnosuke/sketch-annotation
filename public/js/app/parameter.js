@@ -13,9 +13,12 @@ var Parameters = function () {
 
     this.boundingboxs=[]; //coco的原来标注的boundingbox
 
-    this.is_show_select=true;//是否显示已经标注物体的笔画
-
     this.is_stroke_delete=false;//取消标注完的笔画模式
+    
+    this.is_show_select = true;//是否显示已经标注物体的笔画
+    this.is_show_cur_obj = false; //true只显示当前物体，false显示全部物体
+    this.is_show_useless = true; //true显示useless类别，false不显示useless类别
+    this.is_show_reference = false; //是否显示参考图像，默认不显示
 };
  
 //通过物体id获取该物体的引用
@@ -246,10 +249,26 @@ Parameters.prototype.set_cur_object_id = function (object_id) {
 };
 
 //标注笔画，也就是将笔画移入某个物体中
+Parameters.prototype.get_all_strokes_num=function(useless)
+{
+    var len=0;
+    for (var i=0; i<this.objects.length; i++){
+        if(!useless && this.objects[i].category == "useless"){
+            continue;
+        }
+        else{
+            len += this.objects[i].strokes.length;
+        }
+    }
+    len+=this.strokes.length;
+    return len;
+};
+
+//标注笔画，也就是将笔画移入某个物体中
 Parameters.prototype.movestroke=function(stroke_id,object_id)
 {
     var stroke=null;
-    for(var i=0;i<this.strokes.length;i++)
+    for(var i=0; i<this.strokes.length;i++)
     {
         if(this.strokes[i].id==stroke_id)
         {
@@ -257,9 +276,9 @@ Parameters.prototype.movestroke=function(stroke_id,object_id)
             break;
         }
     }
-    for (var j=0;j<this.objects.length;j++)
+    for (var j=0; j<this.objects.length; j++)
     {
-        if(this.objects[j].id==object_id&&stroke!=null)
+        if(this.objects[j].id == object_id && stroke != null)
         {
             this.strokes.splice(i,1);
             this.objects[j].strokes.push(stroke);

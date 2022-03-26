@@ -19,7 +19,7 @@
             </select>
             
             <button id="add_object" style="width: 50px;height: 20px;">add</button>
-            <button id="show_select" style="width: 50px;height: 20px;">show</button>
+<!--             <button id="show_select" style="width: 50px;height: 20px;">show</button> -->
             <button id="delete_object" style="width: 50px;height: 20px;">delete</button>
 
             <br/>
@@ -42,6 +42,10 @@
                 <option disabled selected>select_stroke</option>
             </select>   
             <input type="checkbox" id="stroke_delete"/>delete
+            </br></br>
+            <label id="lbl_cur">cur_num:0  </label>
+            <label id="lbl_all">  all_num:0  </label>
+
             <h1>boundingbox</h1>
             <button id="del_box" style="width: 70px;height: 20px;">DelBox</button> 
             <button id="cancle_box" style="width: 90px;height: 20px;">CancleBox</button> 
@@ -81,6 +85,13 @@
                 <option value="33">33%-66%</option>
                 <option value="0"><33%</option>
             </select>  
+
+            <div class="clear">
+                <h2>show</h2>
+            </div>
+            <input type="checkbox" id="cb_cur" value="false"/>cur_obj_only
+            <input type="checkbox" id="cb_useless" value="true"/>useless
+            <input type="checkbox" id="cb_reference" value="false"/>reference
         </article>
     </div>
 </section>

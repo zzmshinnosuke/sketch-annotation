@@ -54,6 +54,7 @@ function mouseClicked() {
         redraw_screen();
         layout.update_select_strokes();
         layout.update_all_strokes();
+        layout.updateStrokes();
         ismouse_select=false;
         Paras.cur_stroke_id=-1;
     }
@@ -79,16 +80,19 @@ function keyPressed() {
         redraw_screen();
         layout.update_select_strokes();
         layout.update_all_strokes();
+        layout.updateStrokes();
     } 
     
     if (keyCode === 68){
         Paras.is_stroke_delete=true;
+        document.getElementById("defaultCanvas0").style.cursor = "url("+Apollo.publicUrl + 'css/images/eraser.png'+") 0 0,pointer";
     }
 }
 
 function keyReleased() {
     if (keyCode === 68){
         Paras.is_stroke_delete=false;
+        document.getElementById("defaultCanvas0").style.cursor = "";
     }
 }
 
@@ -407,39 +411,49 @@ var process_image = function(){
 var redraw_screen = function () {
     draw_area_line();
 
-    if (Paras.strokes && Paras.strokes.length > 0) {
+    if (!Paras.is_show_cur_obj && Paras.strokes && Paras.strokes.length > 0) {
         draw_example(Paras.strokes);
     }
 
-    if(Paras.is_show_select&&Paras.objects&& Paras.objects.length>0)
-    {
-        for(var i=0;i<Paras.objects.length;i++)
-        {
+    if(Paras.is_show_select && Paras.objects && Paras.objects.length>0){
+        for(var i = 0; i < Paras.objects.length; i++){
+            if(! Paras.is_show_useless && Paras.objects[i].category == "useless"){
+                continue;
+            }
+            if(Paras.is_show_cur_obj && Paras.objects[i].id != Paras.cur_object_id){
+                continue;
+            }
             draw_object(Paras.objects[i]);
         }
     }
 
-    if(Paras.boundingboxs&&Paras.boundingboxs.length>0){
-        for(var i=0;i<Paras.boundingboxs.length;i++){
+    if(Paras.boundingboxs && Paras.boundingboxs.length > 0){
+        console.log(Paras.is_show_reference);
+        for(var i=0; i<Paras.boundingboxs.length; i++){
             draw_boundingbox(Paras.boundingboxs[i]);
         }
     }
 
 };
 
-var draw_area_line=function(){
-    background(255,255,255,255);
-    fill(255,255,255,255);
-    image(img,image_x+20,image_y,image_width,image_height);
+var draw_area_line = function(){
+    background(255, 255, 255, 255);
+    fill(255, 255, 255, 255);
+    if(Paras.is_show_reference){
+        image(img, image_x + 20, image_y, image_width, image_height);
+    }
 
     stroke(0.25);
     strokeWeight(0.25);
-    line(canvas_x,0,canvas_x,screen_height);
-    line(image_x,0,image_x,screen_height);
+    line(canvas_x, 0, canvas_x,screen_height);
+    line(image_x, 0, image_x,screen_height);
     // line(image_x+image_width+40,0,image_x+image_width+40,screen_height);
 };
 
-var draw_boundingbox=function (boundingbox,object_color) {
+var draw_boundingbox = function (boundingbox, object_color) {
+    if(!Paras.is_show_reference){
+        return;
+    }
     // console.log(boundingbox);
     var x1=boundingbox.x1+image_x+20;
     var y1=boundingbox.y1+image_y;
@@ -450,7 +464,7 @@ var draw_boundingbox=function (boundingbox,object_color) {
     var g=boundingbox.color[1];
     var b=boundingbox.color[2];
     var a=boundingbox.color[3];
-    if(object_color!=null)
+    if(object_color != null)
     {
         r=object_color[0];
         g=object_color[1];
