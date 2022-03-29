@@ -46,10 +46,10 @@ function mouseClicked() {
     {
         if(Paras.isInArray(Paras.strokes,Paras.cur_stroke_id))
         {
-            Paras.movestroke(Paras.cur_stroke_id,Paras.cur_object_id);
+            Paras.movestroke(Paras.cur_stroke_id, Paras.getCurObjectId());
         }
         else{
-            Paras.movestrokeback(Paras.cur_stroke_id,Paras.cur_object_id);
+            Paras.movestrokeback(Paras.cur_stroke_id, Paras.getCurObjectId());
         }
         redraw_screen();
         layout.update_select_strokes();
@@ -73,7 +73,7 @@ function keyPressed() {
             var stroke_id=Paras.cur_stroke_ids[i];
             if(Paras.isInArray(Paras.strokes,stroke_id))
             {
-                Paras.movestroke(stroke_id,Paras.cur_object_id);
+                Paras.movestroke(stroke_id, Paras.getCurObjectId());
             }
         }
         Paras.cur_stroke_ids=[];
@@ -82,9 +82,9 @@ function keyPressed() {
         layout.update_all_strokes();
         layout.updateStrokes();
     } 
-    
-    if (keyCode === 68){
-        Paras.is_stroke_delete=true;
+    // 按d键的时候，可以删除当前选中的笔画。
+    if (keyCode === 68){   
+        Paras.is_stroke_delete = true;
         document.getElementById("defaultCanvas0").style.cursor = "url("+Apollo.publicUrl + 'css/images/eraser.png'+") 0 0,pointer";
     }
 }
@@ -120,13 +120,11 @@ var init=function(){
     // im.position(operate_x+canvas_width+40+20,operate_y+canvas_y);
     // im.size(image_width,image_height);
 
-    canvas=createCanvas(canvas_width+image_width+80,Math.max(screen_height,img.height));
+    canvas=createCanvas(canvas_width + image_width + 80, Math.max(screen_height, img.height));
     canvas.position(operate_x,operate_y);
 
-    frameRate(50);
+    frameRate(20);
     background(255,255,255,255);
-
-    
 
     redraw_screen();
 }
@@ -162,7 +160,6 @@ var pointToCorner=function(x,y,boundingbox){
     var x2=boundingbox.x2;
     var y2=boundingbox.y2;
 
-    // console.log(Math.sqrt((x-x1-image_x-20)*(x-x1-image_x-20)+(y-y1-image_y)*(y-y1-image_y)));
     if(Math.sqrt(Math.sqrt((x-x1-image_x-20)*(x-x1-image_x-20)+(y-y1-image_y)*(y-y1-image_y)))<3){
         stroke('red'); // Change the color
         strokeWeight(10); // Make the points 10 pixels in size
@@ -209,7 +206,6 @@ var is_stroke_in_box=function(temp_stroke1,x1,y1,x2,y2){
 }
 
 var process_user_input = function () {
-    
     if(mouseX>=0 && mouseX<=canvas_width+40 && mouseY>=0 && mouseY<=Math.max(screen_height,img.height)+20+canvas_y){  
         process_canvas();
     }
@@ -279,10 +275,8 @@ var process_canvas = function(){
             redraw_screen();
             ismouse_select=false;
             Paras.cur_stroke_id=-1;
-            //console.log(mouseX,mouseY);
             for(var i=0;i<Paras.strokes.length;i++)
             {
-
                 var temp_stroke=$.extend({}, Paras.strokes[i]);
                 for(var j=0;j<temp_stroke.points.length;j++)
                 {
@@ -299,11 +293,10 @@ var process_canvas = function(){
                 if(ismouse_select)
                     return;
             }
-        }
-        
+        }   
     }
     else{
-        if(Paras.cur_object_id!=-1&&Paras.is_show_select){
+        if(Paras.getCurObjectId() != -1){
             var dx0 = mouseX-x; // candidate for dx
             var dy0 = mouseY-y; // candidate for dy
             if (dx0*dx0+dy0*dy0 < epsilon*epsilon) { // only if pen is not in same area
@@ -314,11 +307,10 @@ var process_canvas = function(){
             redraw_screen();
             ismouse_select=false;
             Paras.cur_stroke_id=-1;
-            var new_object=Paras.getObjectFid(Paras.cur_object_id);
-            console.log(new_object.id);
-            for(var i=0;i<new_object.strokes.length;i++)
+            var cur_object=Paras.getCurObject();
+            for(var i = 0; i < cur_object.strokes.length; i++)
             {
-                var temp_stroke=$.extend({}, new_object.strokes[i]);
+                var temp_stroke=$.extend({}, cur_object.strokes[i]);
                 for(var j=0;j<temp_stroke.points.length;j++)
                 {
                     var point=temp_stroke.points[j];
@@ -344,8 +336,8 @@ var process_image = function(){
     Paras.cur_stroke_id=-1;
     Paras.cur_stroke_ids=[];
     //判断是否已经选择了boundingbox，没有选择才可以选
-    if(Paras.getObjectFid(Paras.cur_object_id)!=null){
-        if(Paras.getObjectFid(Paras.cur_object_id).boundingbox==null){
+    if(Paras.getCurObject() != null){
+        if(Paras.getCurObject().boundingbox == null){
             if(mouseIsPressed){
                 if(!has_started_image)
                 {
@@ -373,19 +365,17 @@ var process_image = function(){
                 }     
             }
             else{
-                if(has_started_image)
-                {
-                    if(x>=image_x+20&&start_x>=image_x+20)
-                    {
-                        Paras.getObjectFid(Paras.cur_object_id).boundingbox=Paras.addboundingbox(x-image_x-20,y-image_y,start_x-image_x-20,start_y-image_y);    
+                if(has_started_image){
+                    if(x >= image_x + 20 && start_x >= image_x+20){
+                        Paras.getCurObject().boundingbox = Paras.addboundingbox(x-image_x-20, y-image_y, start_x-image_x-20, start_y-image_y);    
                     }
                     has_started_image=false;
                 }
             }
             for(var i=0;i<Paras.boundingboxs.length;i++){
-                if(pointToBoundingbox(mouseX,mouseY,Paras.boundingboxs[i],3)){
+                if(pointToBoundingbox(mouseX, mouseY, Paras.boundingboxs[i], 3)){
                     var temp_boundingbox=$.extend({}, Paras.boundingboxs[i]);
-                    temp_boundingbox.color=[255,0,0];
+                    temp_boundingbox.color=[255, 0, 0];
                     draw_boundingbox(temp_boundingbox);
                     is_boundingbox_select=true;
                     Paras.cur_boundingbox_id=i;
@@ -396,9 +386,9 @@ var process_image = function(){
         }
         else{
             redraw_screen();
-            var point=pointToCorner(mouseX,mouseY,Paras.getObjectFid(Paras.cur_object_id).boundingbox);  
+            var point=pointToCorner(mouseX, mouseY, Paras.getCurObject().boundingbox);  
             if(mouseIsPressed){
-                Paras.changebox(mouseX-image_x-20,mouseY-image_y,point,Paras.getObjectFid(Paras.cur_object_id).boundingbox);
+                Paras.changebox(mouseX-image_x-20, mouseY-image_y, point, Paras.getCurObject().boundingbox);
             }
             return;
         }        
@@ -415,12 +405,12 @@ var redraw_screen = function () {
         draw_example(Paras.strokes);
     }
 
-    if(Paras.is_show_select && Paras.objects && Paras.objects.length>0){
+    if(Paras.objects && Paras.objects.length>0){
         for(var i = 0; i < Paras.objects.length; i++){
             if(! Paras.is_show_useless && Paras.objects[i].category == "useless"){
                 continue;
             }
-            if(Paras.is_show_cur_obj && Paras.objects[i].id != Paras.cur_object_id){
+            if(Paras.is_show_cur_obj && Paras.objects[i].id != Paras.getCurObjectId()){
                 continue;
             }
             draw_object(Paras.objects[i]);
@@ -428,7 +418,6 @@ var redraw_screen = function () {
     }
 
     if(Paras.boundingboxs && Paras.boundingboxs.length > 0){
-        console.log(Paras.is_show_reference);
         for(var i=0; i<Paras.boundingboxs.length; i++){
             draw_boundingbox(Paras.boundingboxs[i]);
         }
@@ -445,16 +434,14 @@ var draw_area_line = function(){
 
     stroke(0.25);
     strokeWeight(0.25);
-    line(canvas_x, 0, canvas_x,screen_height);
-    line(image_x, 0, image_x,screen_height);
-    // line(image_x+image_width+40,0,image_x+image_width+40,screen_height);
+    line(canvas_x, 0, canvas_x, screen_height);
+    line(image_x, 0, image_x, screen_height);
 };
 
 var draw_boundingbox = function (boundingbox, object_color) {
     if(!Paras.is_show_reference){
         return;
     }
-    // console.log(boundingbox);
     var x1=boundingbox.x1+image_x+20;
     var y1=boundingbox.y1+image_y;
     var x2=boundingbox.x2+image_x+20;
@@ -494,7 +481,6 @@ var draw_stroke=function(new_stroke)
 
 //从保存的笔画数组中绘制所有的笔画在画板上
 var draw_example = function(example) {
-    //console.log(example);
     for(var i=0;i<example.length;i++) {
         // sample the next pen's states from our probability distribution
         var temp_stroke = example[i];
@@ -512,7 +498,7 @@ var draw_example = function(example) {
 
 var draw_object = function(object) {
     var temp_color=[];
-    if(object.id==Paras.cur_object_id){
+    if(object.id==Paras.getCurObjectId()){
         temp_color=[0, 255, 0,255];
     }
     else{

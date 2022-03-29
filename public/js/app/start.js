@@ -4,12 +4,12 @@
  */
 
 
-window.onload =function () {
+window.onload = function () {
 	
 	layout.init(); 
 
 	layout.addButtonEvents();
-    if(Apollo.review>0){
+    if(Apollo.review > 0){
         //审核模式下，直接加载物体
         layout.load();
     }
@@ -20,9 +20,9 @@ window.onload =function () {
         layout.refresh();
     }
 	
-    if(Apollo.review>0)
+    if(Apollo.review > 0)
     {
-        document.getElementById("scene_review").innerHTML = "Scene  "+Apollo.task+"   Review";
-        document.getElementById("scene_review").style="color:red";
+        document.getElementById("scene_review").innerHTML = "Scene  " + Apollo.task + "   Review";
+        document.getElementById("scene_review").style = "color:red";
     }
 }

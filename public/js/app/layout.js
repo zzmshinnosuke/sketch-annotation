@@ -1,6 +1,5 @@
 'use strict';
 var Layout = function () {
-
 };
 
 Layout.prototype.init = function () {
@@ -13,7 +12,6 @@ Layout.prototype.init = function () {
 
     this.objectsSelect=$('#objects');
 
-    this.showselectbtn=$('#show_select');
     this.deleteObjectbtn=$('#delete_object');
 
     this.delboxbtn=$('#del_box');
@@ -30,7 +28,7 @@ Layout.prototype.init = function () {
     var boxs=Apollo.boxs.split('#');
     for(var i=0;i<boxs.length;i++){
         if(boxs[i]!=""){
-            var bb=new boundingbox();
+            var bb=new MyBoundingBox();
             var lis=boxs[i].split(',');
             for(var j=0;j<lis.length;j++)
             {
@@ -73,14 +71,13 @@ Layout.prototype.load = function (_task = -1) {
             if (data === "0")
                 return;
             var list = JSON.parse(data);
-            // console.log(list);
             if (list.length == 0)
                 return;
             Paras.objects=list["objects"];
             if(Paras.objects.length>0)
             {
                 Paras.strokes=[];
-                Paras.set_cur_object_id(Paras.objects[0].id);
+                Paras.setCurObjectId(Paras.objects[0].id);
             }
             for(var i=0;i<Paras.objects.length;i++){
                 for(var j=0;j<Paras.boundingboxs.length;j++)
@@ -91,7 +88,6 @@ Layout.prototype.load = function (_task = -1) {
                     }
                 }
             }
-            // redraw_screen();
             layout.refresh();
         },
         error: function (data, status, jqXHR) {
@@ -139,7 +135,6 @@ Layout.prototype.addButtonEvents = function () {
             window.location.href = Apollo.baseUrl + "?review=" + Apollo.review+ "&&task=" + task;
         else
             window.location.href = Apollo.baseUrl + "?task=" + task;
-
 	});
 
 	this.previousbtn.click(function () {
@@ -150,7 +145,6 @@ Layout.prototype.addButtonEvents = function () {
             window.location.href = Apollo.baseUrl + "?review=" + Apollo.review+ "&&task=" + task;
         else
             window.location.href = Apollo.baseUrl + "?task=" + task;
-
     });
     
     this.addbtn.click(function () {
@@ -159,28 +153,16 @@ Layout.prototype.addButtonEvents = function () {
             layout.refresh();
         }
     });  
-    
-    this.showselectbtn.click(function () {
-        if(Paras.is_show_select){
-            Paras.is_show_select=false;
-        }
-        else{
-            Paras.is_show_select=true;
-        }
-    });  
 
     this.deleteObjectbtn.click(function () {
-        Paras.deleteobject(Paras.cur_object_id);
+        Paras.deleteobject(Paras.getCurObjectId());
         layout.refresh();
     });  
 
 	this.savebtn.click(function () {
-		if (!Paras.allowSave()) {
-			return;
-		} else {
+		if(Paras.allowSave()) {
 			layout.submit();
-        }
-        //layout.submit();
+		} 
 	});
 
 	this.loadbtn.click(function () {
@@ -199,7 +181,6 @@ Layout.prototype.addButtonEvents = function () {
     this.cancleboxbtn.click(function () {
         Paras.cancle_box();
     });
-
 
     $("#stroke_delete").change(function () {
         if($("#stroke_delete").get(0).checked ==true)
@@ -243,7 +224,6 @@ Layout.prototype.addButtonEvents = function () {
         }
     });
 
-    
     $("#integrity").change(function() {
         var integrity=parseInt($("#integrity").val());
         Paras.setIntegrity(integrity);
@@ -255,8 +235,8 @@ Layout.prototype.addButtonEvents = function () {
     });
 
     $("#objects").change(function() {
-        Paras.set_cur_object_id(parseInt($("#objects").val()));
-        console.log("curent object is:"+Paras.getObjectFid(Paras.cur_object_id).name);
+        Paras.setCurObjectId(parseInt($("#objects").val()));
+        console.log("curent object is:" + Paras.getCurObject().name, "  curent objectid is:" + Paras.getCurObjectId());
         layout.refresh();
     });
 
@@ -299,6 +279,7 @@ Layout.prototype.addButtonEvents = function () {
             Paras.setDirection(direction);
         }
     }); 
+    
     $("#quality").change(function() {
         var quality=$("#quality").val();
         if(quality!=""){
@@ -310,35 +291,28 @@ Layout.prototype.addButtonEvents = function () {
 Layout.prototype.update_all_strokes = function () {
 	$("#all_strokes").html("");
 	for (var i = 0; i < Paras.strokes.length; ++i) {
-		$("#all_strokes").append("<option id="+'"'+"stroke"+'"'+">"+'stroke '+Paras.strokes[i].id + "</option>");
+		$("#all_strokes").append("<option id=" + '"' + "stroke" + '"' + ">" + 'stroke ' + Paras.strokes[i].id + "</option>");
 	}
-}
+};
 
 Layout.prototype.update_select_strokes = function () {
     $("#select_strokes").html("");
-    var cur_object=null;
-    
-    for(var i=0;i<Paras.objects.length;i++)
-    {
-        if(Paras.objects[i].id==Paras.cur_object_id)
-        {
-            cur_object=Paras.objects[i];
-            for (var i = 0; i < cur_object.strokes.length; ++i) {
-                $("#select_strokes").append("<option id="+'"'+"stroke"+'"'+">"+'stroke'+cur_object.strokes[i].id + "</option>");
-            }
-            break;
+    var obj = Paras.getCurObject();
+    if(null != obj){
+        for (var i = 0; i < obj.strokes.length; ++i) {
+            $("#select_strokes").append("<option id=" + '"' + "stroke" + '"' + ">" + 'stroke' + obj.strokes[i].id + "</option>");
         }
     }
-}
+};
 
 Layout.prototype.updateobjects = function () {
 	$("#objects").html("");
 	for (var i = 0; i < Paras.objects.length; ++i) {
 		$("#objects").append("<option value="+'"'+Paras.objects[i].id+'"'+">" + Paras.objects[i].name + "</option>");
     }
-    if(Paras.cur_object_id!=-1)
+    if(Paras.getCurObjectId() != -1)
     {
-        $("#objects").val(Paras.cur_object_id);
+        $("#objects").val(Paras.getCurObjectId());
     }
 };
 
@@ -348,11 +322,10 @@ Layout.prototype.updateforeground= function() {
 	for (var i = 0; i < Paras.foreground.length; ++i) {
 		$("#foreground").append("<option value="+'"'+Paras.foreground[i]+'"'+">" + Paras.foreground[i] + "</option>");
     }
-    if(Paras.cur_object_id!=-1)
+    if(Paras.getCurObjectId() != -1)
     {
-        $("#foreground").val(Paras.getObjectFid(Paras.cur_object_id).category);
+        $("#foreground").val(Paras.getCurObject().category);
     }
-
 };
 
 Layout.prototype.updatebackground= function() {
@@ -361,9 +334,9 @@ Layout.prototype.updatebackground= function() {
 	for (var i = 0; i < Paras.background.length; ++i) {
 		$("#background").append("<option value="+'"'+Paras.background[i]+'"'+">" + Paras.background[i] + "</option>");
     }
-    if(Paras.cur_object_id!=-1)
+    if(Paras.getCurObjectId() != -1)
     {
-        $("#background").val(Paras.getObjectFid(Paras.cur_object_id).category);
+        $("#background").val(Paras.getCurObject().category);
     }
 };
 
@@ -379,10 +352,14 @@ Layout.prototype.updateLevel=function(){
 };
 
 Layout.prototype.updateStrokes=function(){
-    this.lbl_cur.html("cur_num:"+Paras.getObjectFid(Paras.cur_object_id).strokes.length);
-    this.lbl_all.html("all_num:"+Paras.get_all_strokes_num(false));
+    if(Paras.getCurObject() != null){
+        this.lbl_cur.html("cur_num:" + Paras.getCurObject().strokes.length);
+    }
+    else{
+        this.lbl_cur.html("cur_num:" + 0);
+    }
+    this.lbl_all.html("all_num:" + Paras.get_all_strokes_num(false));
 };
-
 
 Layout.prototype.refresh = function () {
     this.updateobjects();
@@ -392,14 +369,13 @@ Layout.prototype.refresh = function () {
     this.updatebackground();
     this.updateStrokes();
 
-    if(Paras.cur_object_id!=-1)
+    if(Paras.getCurObjectId() != -1)
     {
-        $("#integrity").val(Paras.getObjectFid(Paras.cur_object_id).integrity+"");
-        $("#similarity").val(Paras.getObjectFid(Paras.cur_object_id).similarity+"");
-        $("#direction").val(Paras.getObjectFid(Paras.cur_object_id).direction+"");
-        $("#quality").val(Paras.getObjectFid(Paras.cur_object_id).quality+"");
+        $("#integrity").val(Paras.getCurObject().integrity + "");
+        $("#similarity").val(Paras.getCurObject().similarity + "");
+        $("#direction").val(Paras.getCurObject().direction + "");
+        $("#quality").val(Paras.getCurObject().quality + "");
     }
-    
 };
 
 var layout=new Layout();

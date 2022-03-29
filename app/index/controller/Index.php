@@ -70,7 +70,6 @@ class Index
 				}			
 			}
 			echo $md5_cal;			
-			// echo 1;	
 		} catch (\Exception $e) {
 			echo $e;
 		}
