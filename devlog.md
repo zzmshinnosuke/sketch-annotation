@@ -1,8 +1,9 @@
 # Log
 
 ## 20220329
-今天继续整理代码，本来想搞一个完全封装的东西，把myclass中MyObject的属性全部通过方法进行读写，但是有一个问题，在load的时候直接通过json反序列化而来，跟Myobject中的方法对应不上找不到，会报错。先不搞了，这样也能用。
-bug: 修改了一个bug，本来coco自带的boundingbox是删不掉的，后来发现物体添加boundingbox是可以被删除了，做了一个判断，原来boundingbox不能删除。
+今天继续整理代码，本来想搞一个完全封装的东西，把myclass中MyObject的属性全部通过方法进行读写，但是有一个问题，在load的时候直接通过json反序列化而来，跟Myobject中的方法对应不上找不到，会报错。先不搞了，这样也能用。  
+bug: 修改了一个bug，本来coco自带的boundingbox是删不掉的，后来发现物体添加boundingbox是可以被删除了，做了一个判断，原来boundingbox不能删除。  
+暂时先不动了，这次改的还不错，要是论文中了，公布之前，再改一波。
 
 ## 20220328
 bug: 今天发现一个bug（前几天添加了按住d键，可以删除选中笔画的功能，今天发现12045号草图删除笔画的时候一直跳到“dog” object），分析后发现是select控件自带按住首字母快速选中的功能。解决方法：（1）选择完objects后，点击一下界面的其他部分，取消focus状态；（2）换一个按键；（3）给select添加了一个onkeydown事件，判断按键值为68，也就是d，调用blur(),取消select的focus。
